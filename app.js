@@ -1621,6 +1621,10 @@ Escribe solo el texto de tu respuesta.`;
   if (launchMode() === 'auto') setTimeout(() => { if (state.screen === 'launch') startScreen(); }, 1400);
   // Funciona sin conexión y se puede instalar (solo desde la página publicada, no dentro de otra vista).
   if ('serviceWorker' in navigator && !embedded && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => { /* sin modo sin conexión */ }); });
+    // Algunos navegadores rechazan el registro mientras la página termina de cargar: se reintenta.
+    const registerSW = (tries) => navigator.serviceWorker.register('sw.js')
+      .catch(() => { if (tries > 0) setTimeout(() => registerSW(tries - 1), 2500); });
+    if (document.readyState === 'complete') registerSW(3);
+    else window.addEventListener('load', () => setTimeout(() => registerSW(3), 800));
   }
 })();
