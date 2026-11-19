@@ -457,7 +457,7 @@ Escribe solo el texto de tu respuesta.`;
       <div class="grow"></div>
       <button class="btn" data-act="toLocation">${state.editing ? 'Guardar' : 'Continuar'}</button></section>`;
   }
-  function location() {
+  function locationScreen() {
     const item = (t) => `<li><span class="check">${svg('check', 14, 3)}</span>${t}</li>`;
     return `<section class="page onb">
       <div class="onb-hero">
@@ -1135,7 +1135,7 @@ Escribe solo el texto de tu respuesta.`;
     if (s.screen === 'welcome') return welcome() + looseSheet();
     if (s.screen === 'interests') return interests();
     if (s.screen === 'budget') return budget();
-    if (s.screen === 'location') return location();
+    if (s.screen === 'location') return locationScreen();
     const full = s.tab === 'explorar' && (s.sub === 'nav' || s.sub === 'mapa');
     const home = s.tab === 'explorar' && !s.sub;
     return `<div class="shell"><div class="scroll${s.sub === 'mapa' ? ' fixed' : ''}" id="scroll">${appScreen()}</div>
