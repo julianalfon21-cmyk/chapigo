@@ -1623,8 +1623,12 @@ Escribe solo el texto de tu respuesta.`;
   if ('serviceWorker' in navigator && !embedded && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     // Algunos navegadores rechazan el registro mientras la página termina de cargar: se reintenta.
     const registerSW = (tries) => navigator.serviceWorker.register('sw.js')
-      .catch(() => { if (tries > 0) setTimeout(() => registerSW(tries - 1), 2500); });
+      .then(() => { window.__chapiSW = 'ok'; })
+      .catch((err) => { window.__chapiSW = String(err); if (tries > 0) setTimeout(() => registerSW(tries - 1), 2500); });
+    window.__chapiSW = 'pendiente';
     if (document.readyState === 'complete') registerSW(3);
     else window.addEventListener('load', () => setTimeout(() => registerSW(3), 800));
+    // También al primer toque, por si el navegador lo rechazó durante la carga.
+    app.addEventListener('pointerdown', () => { if (window.__chapiSW !== 'ok') registerSW(0); }, { once: true });
   }
 })();
